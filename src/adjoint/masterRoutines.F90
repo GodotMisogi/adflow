@@ -769,10 +769,7 @@ contains
                 call saResScale_b
                 call saViscous_b
                 !call unsteadyTurbTerm_b(1_intType, 1_intType, itu1-1, qq)
-                call turbAdvection_b(1_intType, 1_intType, itu1-1, qq)
-                ! turbAdvection_b zeros the faceid. This should be ok since
-                ! it presumably is the last call in master using faceid and
-                ! therefore should be the first call in master_b to use faceid
+                call turbAdvection_b(1_intType, 1_intType, itu1-1, NULL())
                 call saSource_b
              end select
 
