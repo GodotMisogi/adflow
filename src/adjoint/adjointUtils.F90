@@ -801,6 +801,7 @@ contains
                flowDomsd(nn, level, sps)%qz(il,jl,kl), &
                flowDomsd(nn, level, sps)%rlv(0:ib,0:jb,0:kb), &
                flowDomsd(nn, level, sps)%rev(0:ib,0:jb,0:kb), &
+               flowDomsd(nn, level, sps)%dtl(1:ie,1:je,1:ke), &
                flowDomsd(nn, level, sps)%radI(1:ie,1:je,1:ke), &
                flowDomsd(nn, level, sps)%radJ(1:ie,1:je,1:ke), &
                flowDomsd(nn, level, sps)%radK(1:ie,1:je,1:ke), &
@@ -946,6 +947,8 @@ contains
 
     flowDomsd(nn, level, sps)%rlv = zero
     flowDomsd(nn, level, sps)%rev = zero
+
+    flowDomsd(nn, level, sps)%dtl = zero
 
     flowDomsd(nn, level, sps)%radI = zero
     flowDomsd(nn, level, sps)%radJ = zero
@@ -2243,6 +2246,11 @@ end subroutine statePreAllocation
     ISIZE1OFDrfgamma = ib + 1
     ISIZE2OFDrfgamma = jb + 1
     ISIZE3OFDrfgamma = kb + 1
+
+    ! dtl
+    ISIZE1OFDrfdtl = ie
+    ISIZE2OFDrfdtl = je
+    ISIZE3OFDrfdtl = ke
 
     ! radI
     ISIZE1OFDrfradI = ie

@@ -236,6 +236,7 @@ contains
           end if
 
           call applyAllBC_block(.True.)
+
        end do
     end do
 
