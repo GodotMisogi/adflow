@@ -879,8 +879,9 @@ nadvloopspectral:do ii=1,nadv
 !      subroutine arguments.
 !
     integer(kind=inttype), intent(in) :: nadv, madv, offset
-    real(kind=realtype), dimension(2:il, 2:jl, 2:kl, madv, madv), &
-&   intent(inout) :: qq
+    real(kind=realtype), pointer, dimension(:,:,:,:,:), &
+&   intent(in) :: qq
+
 !
 !      local variables.
 !
@@ -1731,8 +1732,8 @@ nadvloopspectral:do ii=1,nadv
 !      subroutine arguments.
 !
     integer(kind=inttype), intent(in) :: nadv, madv, offset
-    real(kind=realtype), dimension(2:il, 2:jl, 2:kl, madv, madv), &
-&   intent(inout) :: qq
+    real(kind=realtype), pointer, dimension(:,:,:,:,:), &
+&   intent(in) :: qq
 !
 !      local variables.
 !
