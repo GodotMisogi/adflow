@@ -87,9 +87,7 @@ contains
 
        do sps=1, nTimeIntervalsSpectral
           ! Update overset connectivity if necessary
-          if (oversetPresent .and. &
-               (oversetUpdateMode == updateFast .or. &
-               oversetUpdateMode == updateFull)) then
+          if (oversetPresent .and. oversetUpdateMode == updateFast) then
              call updateOversetConnectivity(1_intType, sps)
           end if
        end do
@@ -272,7 +270,7 @@ contains
 
     use constants
     use diffsizes, only :  ISIZE1OFDrfbcdata, ISIZE1OFDrfviscsubface
-    use communication, only : adflow_comm_world
+    use communication, only : adflow_comm_world, myID
     use iteration, only : currentLevel
     use BCExtra_d, only : applyAllBC_Block_d
     use inputAdjoint,  only : viscPC
@@ -384,11 +382,14 @@ contains
 
     do sps=1, nTimeIntervalsSpectral
        ! Update overset connectivity if necessary
-       if (oversetPresent .and. &
-            (oversetUpdateMode == updateFast .or. &
-            oversetUpdateMode == updateFull)) then
-          print *,'Full overset update derivatives not implemented'
-          !call updateOversetConnectivity_d(1_intType, sps)
+       if (oversetPresent) then
+          if (oversetUpdateMode == updateFast) then
+             call updateOversetConnectivity_d(1_intType, sps)
+          else if (oversetUpdateMode == updateFull) then
+             if (myID == 0) then
+                print *,'Full overset update derivatives not implemented'
+             end if
+          end if
        end if
     end do
 
@@ -908,11 +909,14 @@ contains
 
     do sps=1, nTimeIntervalsSpectral
        ! Update overset connectivity if necessary
-       if (oversetPresent .and. &
-            (oversetUpdateMode == updateFast .or. &
-            oversetUpdateMode == updateFull)) then
-          print *,'Full overset update derivatives not implemented'
-          !call updateOversetConnectivity_b(1_intType, sps)
+       if (oversetPresent) then
+          if (oversetUpdateMode == updateFast) then
+             call updateOversetConnectivity_b(1_intType, sps)
+          else if (oversetUpdateMode == updateFull) then
+             if (myID == 0) then
+                print *,'Full overset update derivatives not implemented'
+             end if
+          end if
        end if
     end do
     ! Now the adjoint of the coordinate exhcange
