@@ -23,7 +23,9 @@ class ADflowMesh(ExplicitComponent):
 
         self.aero_solver = self.options["aero_solver"]
 
-        self.x_a0 = self.aero_solver.getSurfaceCoordinates(includeZipper=False).flatten(order="C")
+        self.x_a0 = self.aero_solver.getSurfaceCoordinates(
+            groupName=self.aero_solver.meshFamilyGroup, includeZipper=False
+        ).flatten(order="C")
 
         coord_size = self.x_a0.size
         self.add_output(
@@ -49,7 +51,7 @@ class ADflowMesh(ExplicitComponent):
         # this is a list of lists of 3 points
         # p0, v1, v2
 
-        return self._getTriangulatedMeshSurface()
+        return self._getTriangulatedMeshSurface(groupName=groupName)
 
     def _getTriangulatedMeshSurface(self, groupName=None, **kwargs):
         """
@@ -162,7 +164,7 @@ class ADflowWarper(ExplicitComponent):
         solver = self.solver
 
         x_a = inputs["x_aero"].reshape((-1, 3))
-        solver.setSurfaceCoordinates(x_a)
+        solver.setSurfaceCoordinates(x_a, groupName=solver.meshFamilyGroup)
         solver.updateGeometryInfo()
         outputs["adflow_vol_coords"] = solver.mesh.getSolverGrid()
 
@@ -1147,10 +1149,16 @@ class ADflowBuilder(Builder):
         restart_failed_analysis=False,  # retry after failed analysis
         err_on_convergence_fail=False,  # raise an analysis error if the solver stalls
         balance_group=None,
+        my_surfs=None,
     ):
 
         # options dictionary for ADflow
         self.options = options
+
+        if my_surfs is None:
+            self.my_surfs = None
+        else:
+            self.my_surfs = my_surfs
 
         # MACH tools require separate option dictionaries for solver and mesh
         # if user did not provide a separate mesh_options dictionary, we just use
@@ -1216,7 +1224,12 @@ class ADflowBuilder(Builder):
     # api level method for all builders
     def initialize(self, comm):
         self.solver = ADFLOW(options=self.options, comm=comm)
+
+        if self.my_surfs is not None:
+            self.solver.addFamilyGroup("my_surf", self.my_surfs)
+
         mesh = USMesh(options=self.mesh_options, comm=comm)
+
         self.solver.setMesh(mesh)
 
     def get_solver(self):
