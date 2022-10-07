@@ -151,6 +151,7 @@ class ADflowWarper(ExplicitComponent):
 
         # self.ap_vars,_ = get_dvs_and_cons(ap=ap)
 
+
         # state inputs and outputs
         local_volume_coord_size = solver.mesh.getSolverGrid().size
 
@@ -277,7 +278,7 @@ class ADflowSolver(ImplicitComponent):
         ap = self.ap
 
         # Set the warped mesh
-        # solver.mesh.setSolverGrid(inputs['adflow_vol_coords'])
+        solver.mesh.setSolverGrid(inputs['adflow_vol_coords'])
         # ^ This call does not exist. Assume the mesh hasn't changed since the last call to the warping comp for now
         # TODO we must fix this. we need to put in the modified volume coordinates
 
@@ -290,7 +291,7 @@ class ADflowSolver(ImplicitComponent):
         if self._do_solve:
 
             # Set the warped mesh
-            # solver.mesh.setSolverGrid(inputs['adflow_vol_coords'])
+            solver.mesh.setSolverGrid(inputs['adflow_vol_coords'])
             # ^ This call does not exist. Assume the mesh hasn't changed since the last call to the warping comp for now
 
             self._set_ap(inputs)
@@ -543,7 +544,7 @@ class ADflowForces(ExplicitComponent):
         self._set_ap(inputs)
 
         # Set the warped mesh
-        # solver.mesh.setSolverGrid(inputs['adflow_vol_coords'])
+        solver.mesh.setSolverGrid(inputs['adflow_vol_coords'])
         # ^ This call does not exist. Assume the mesh hasn't changed since the last call to the warping comp for now
         # TODO we must fix this. we need to put in the modified volume coordinates
         self._set_states(inputs)
@@ -666,7 +667,7 @@ class AdflowHeatTransfer(ExplicitComponent):
         self._set_ap(inputs)
 
         # Set the warped mesh
-        # solver.mesh.setSolverGrid(inputs['adflow_vol_coords'])
+        solver.mesh.setSolverGrid(inputs['adflow_vol_coords'])
         # ^ This call does not exist. Assume the mesh hasn't changed since the last call to the warping comp for now
         # TODO we must fix this. we need to put in the modified volume coordinates
 
@@ -901,7 +902,7 @@ class ADflowFunctions(ExplicitComponent):
         if self._do_solve:
             self._set_ap(inputs)
             # Set the warped mesh
-            # solver.mesh.setSolverGrid(inputs['adflow_vol_coords'])
+            solver.mesh.setSolverGrid(inputs['adflow_vol_coords'])
             # ^ This call does not exist. Assume the mesh hasn't changed since the last call to the warping comp for now
             self._set_states(inputs)
 
